@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import axios from "axios";
-
+import WelcomePage from "./Welcome";
 import "./App.css";
+import { useNavigate, Route, Routes } from "react-router-dom";
 
-function App() {
+function App(props) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   const handleUsernameChange = (event) => {
     setUsername(event.target.value);
@@ -21,6 +23,7 @@ function App() {
       .post("http://localhost:3000", { username, password })
       .then((response) => {
         console.log(response);
+        navigate("/welcome");
       })
       .catch((error) => {
         console.log(error);
@@ -29,8 +32,15 @@ function App() {
 
   return (
     <div className="App">
-      <h1>Welcome to our game!</h1>
-      <form onSubmit={handleSubmit}>
+      <Routes>
+        <Route
+          path="/welcome"
+          element={<WelcomePage {...props} username={username} />}
+        />
+        <Route path="/" element={<h1>welcome to the game!</h1>} />
+      </Routes>
+
+      <form onSubmit={handleSubmit} action="/welcom">
         <label>
           Username:
           <input type="text" value={username} onChange={handleUsernameChange} />
