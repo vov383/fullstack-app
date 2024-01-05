@@ -2,6 +2,10 @@ const express = require("express");
 const app = express();
 
 const mongoose = require("mongoose");
+const cors = require("cors");
+
+app.use(cors());
+app.use(express.json());
 
 const uri =
   "mongodb+srv://123456:1234567890@cluster0.raucbwi.mongodb.net/?retryWrites=true&w=majority";
@@ -54,6 +58,22 @@ app.post("/create-user", async (req, res) => {
 
 app.get("/", (req, res) => {
   res.send("Welcome to my game app!");
+});
+
+app.post("/", (req, res) => {
+  const { username, password } = req.body;
+  const user = new User({
+    username,
+    password,
+  });
+  user
+    .save()
+    .then(() => {
+      res.send("User send to the database");
+    })
+    .catch((error) => {
+      res.status(500).send(error);
+    });
 });
 
 // const port = 3000; // You can choose any port that's not in use
